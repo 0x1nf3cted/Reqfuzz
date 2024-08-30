@@ -6,40 +6,40 @@
 
 #### Basic Command:
 ```bash
-python reqfuzz.py -h <request_file>
+python reqfuzz.py -b <request_file>
 ```
 - **`<request_file>`**: Specifies the file with HTTP request details, including the method, endpoint, protocol, headers, and body.
 
 #### Options:
 
-- **`-h <request_file>`**:
+- **`-b <request_file>`**:
   - **Purpose**: Defines the file that contains the HTTP request to be tested.
   - **Format**: The file should include the request method, endpoint, protocol, and optionally, headers and body content.
 
-- **`-f <header_file>`** (optional, used with `-h`):
+- **`-h <header_file>`** (optional, used with `-b`):
   - **Purpose**: Provides a file with additional headers to test.
   - **Format**: Each line in the file should follow the format `Header-Name: Header-Value`.
 
-- **`-help`**:
+- **`-belp`**:
   - **Purpose**: Displays the help menu with instructions on how to use the tool.
 
 #### Examples:
 
 1. **Fuzz Headers from Request File**:
    ```bash
-   python reqfuzz.py -h request.txt
+   python reqfuzz.py -b request.txt
    ```
    - Reads the HTTP request from `request.txt` and tests it with the default headers.
 
 2. **Fuzz Headers with Additional Headers**:
    ```bash
-   python reqfuzz.py -h request.txt -f headers.txt
+   python reqfuzz.py -b request.txt -h headers.txt
    ```
    - Tests the HTTP request from `request.txt` using additional headers specified in `headers.txt`.
 
 3. **Show Help Menu**:
    ```bash
-   python reqfuzz.py -help
+   python reqfuzz.py -belp
    ```
    - Provides information on how to use the tool and its available options.
 

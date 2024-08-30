@@ -145,13 +145,13 @@ class ReqFuzz:
 {Fore.YELLOW}{Style.BRIGHT}ReqFuzz Help Menu{Style.RESET_ALL}
 
     Usage:
-    python reqfuzz.py -h <request_file>  : Fuzz HTTP headers using the specified request file.
-    python reqfuzz.py -h <request_file> -f <header_file>  : Fuzz HTTP headers with additional headers from the specified header file.
+    python reqfuzz.py -b <request_file>  : Fuzz HTTP headers using the specified request file.
+    python reqfuzz.py -b <request_file> -h <header_file>  : Fuzz HTTP headers with additional headers from the specified header file.
     python reqfuzz.py -help              : Show this help menu.
 
     Options:
-    -h <request_file>  : Specify a file with the HTTP request details (method, endpoint, protocol, headers, body) you can get it from intercepting the request.
-    -f <header_file>   : Provide a file with additional headers to test.
+    -b <request_file>  : Specify a file with the HTTP request details (method, endpoint, protocol, headers, body) you can get it from intercepting the request.
+    -h <header_file>   : Provide a file with additional headers to test.
     -help              : Display this help menu.
 
     {Fore.CYAN}{Style.BRIGHT}For more information and updates, visit https://github.com/0x1nf3cted.{Style.RESET_ALL}
@@ -173,8 +173,8 @@ def run():
     fuzzer.not_a_hacking_tool_without_ascii_art()
 
     match sys.argv[1]:
-        case '-h':
-            if len(sys.argv) >= 5 and sys.argv[3] == "-f":
+        case '-b':
+            if len(sys.argv) >= 5 and sys.argv[3] == "-h":
                 header_file = sys.argv[4]
                 if not fuzzer.check_file(header_file):
                     print(f"{Fore.RED}Error, the header file that you provided doesn't exist")
@@ -201,6 +201,7 @@ def run():
             start_time = time.time()
             fuzzer.fuzz_in_threads(20)
             print("--- %s seconds ---" % (time.time() - start_time))
+
 
         case _:
             print(f"{Fore.RED}Error, can't recognize the argument")
