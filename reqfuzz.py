@@ -4,12 +4,12 @@ import threading
 import os
 from colorama import Fore, Style, init
 
-# Initialize Colorama
+ 
 init(autoreset=True)
 
 class ReqFuzz:
     def __init__(self):
-        # Initializing attributes
+ 
         self.request_info = {}
         self.http_methods = ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS", "CONNECT", "TRACE"]
         self.body_content = ""
@@ -28,7 +28,7 @@ class ReqFuzz:
 
         if len(lines) == 0:
             print("Error in parsing the file")
-            return headers, body_content  # Early return if no lines are found
+            return headers, body_content  
 
         if len(lines[0].split()) == 3:
             method, endpoint, protocol = lines[0].split()
@@ -40,11 +40,11 @@ class ReqFuzz:
                 self.request_info["protocol"] = protocol
         else:
             print("Error, the request file cannot be parsed")
-            return headers, body_content  # Early return if the header line is not in the expected format
+            return headers, body_content   
 
         body_found = False
         for i in range(1, len(lines)):
-            t = lines[i].split(":", 1) # to split only by the first occurance
+            t = lines[i].split(":", 1) 
             if t[0] == "Host":
                 self.request_info["Host"] = t[1].strip()
 
@@ -53,7 +53,7 @@ class ReqFuzz:
                 body_content = '\n'.join(lines[i+1:])
                 body_found = True
             elif not body_found:
-                arr = lines[i].split(":", 1)  # Split only by the first occurrence
+                arr = lines[i].split(":", 1)   
                 if len(arr) == 2:
                     headers[arr[0].strip()] = arr[1].strip()
                 else:
@@ -68,19 +68,19 @@ class ReqFuzz:
             else:
                 header_name, header_value = header.split(":", 1)
 
-            # Copy the global headers to a local variable
+             
             local_headers = self.headers.copy()
 
             # Add the current header to the local headers
             local_headers[header_name.strip()] = header_value.strip()
 
-            # Send the request with the updated headers
+            
             status, data = self.send_request(local_headers)
 
             if status == 200:
                 print(f"{Fore.GREEN}Success, status code {status}{Style.RESET_ALL}")
                 print(local_headers)
-                print("\n\n\n\n")
+                print("\n\n")
             else:
                 print(f"{Fore.RED}Error {status}{Style.RESET_ALL}")
                 print(local_headers)
@@ -107,7 +107,7 @@ class ReqFuzz:
 
         conn = http.client.HTTPConnection(host)
 
-        # Send the request
+ 
         conn.request(method, url, self.body_content, local_headers)
         response = conn.getresponse()
 
