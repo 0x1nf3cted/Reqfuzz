@@ -1,6 +1,5 @@
 # ReqFuzz
 
-![ReqFuzz](images/reqfuzz.png)
 
 ### Description
 
@@ -79,7 +78,12 @@ python reqfuzz.py -b <request_file>
 
 - **Security Testing**: Evaluate how different headers impact the security of your web applications.
 - **Localhost Restriction Bypass**: Test and bypass localhost-specific access controls.
+<<<<<<< HEAD
 - **Fuzzing Request Headers and Body**: Dynamically fuzz request headers and request body using specified payloads.
 - **Compliance and Performance Checks**: Ensure that your application meets security standards and performs well under various header configurations.
 
 ---
+=======
+- **Fuzzing request headers**: it can fuzz request headers and request body on the fly
+- **Compliance and Performance Checks**: Ensure that your application meets security standards and performs well under various header configurations.
+>>>>>>> 09d2afeaa7781d9c3aa84cf8bb1c431c6328019b
