@@ -1,5 +1,6 @@
 # ReqFuzz
 
+![Reqfuzz](images/reqfuzz.png)
 
 ### Description
 
