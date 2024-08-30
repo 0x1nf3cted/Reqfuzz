@@ -1,0 +1,15 @@
+POST /api/product HTTP/1.1
+Host: 94.237.59.63:53464
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:129.0) Gecko/20100101 Firefox/129.0
+Accept: */*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Referer: http://94.237.59.63:53464/product
+Content-Type: application/json
+Content-Length: 71
+Origin: http://94.237.59.63:53464
+Connection: close
+Cookie: session=.eJwdyskOgjAUQNF_6R4CqCjuhDC8xooipYQlDYmlDCaAWIz_LnF7z_2gsZdVh46oUvhRhlzEAgNdwLwIGKBLdtwDG-Qzzzzs6OtkcitTZRuMxX2FNpAlayYQs-CtM_xbly1FDuLs4aaKTiKu_Q2p6UxSbpDUdfRhz67RIaT8nQROTyfbv2x7g2FXY4rcLFuVytf8F5ME0PcHEQQ1JA.ZtFY4g.K0ffuR51ToZghYnZ5uPb-q938G8
+Priority: u=0
+
+{"name":"admin","price":"admin","description":"admin","manual":"admin"}
