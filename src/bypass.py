@@ -20,8 +20,9 @@ class ReqBypass:
         self.headers, self.request_info, self.body_content = self.request_parser.parse_req_file(filename)
         # Optionally update self.request_info here if needed
 
-    def fuzz_headers(self, headers_chunk):
-        for header in headers_chunk:
+    def fuzz_headers(self):
+        f_headers = self.forward_headers if self.headers_provided else self.forward_headers_base
+        for header in f_headers:
             if isinstance(header, tuple):
                 header_name, header_value = header
             else:
@@ -34,24 +35,23 @@ class ReqBypass:
 
             if status == 200:
                 print(f"{Fore.GREEN}Success, status code {status}{Style.RESET_ALL}")
-                print(local_headers)
-                print("\n\n")
+                 
             else:
                 print(f"{Fore.RED}Error {status}{Style.RESET_ALL}")
-                print(local_headers)
+            
+            self.request_parser.print_header(local_headers, self.body_content) 
 
-    def fuzz_in_threads(self, num_threads):
-        f_headers = self.forward_headers if self.headers_provided else self.forward_headers_base
-        threads = []
-        chunk_size = (len(f_headers) + num_threads - 1) // num_threads  # Ceiling division to ensure all headers are covered
+    # def fuzz_in_threads(self, num_threads):
+    #     f_headers = self.forward_headers if self.headers_provided else self.forward_headers_base
+    #     threads = []
+    #     chunk_size = (len(f_headers) + num_threads - 1) // num_threads  # Ceiling division to ensure all headers are covered
+    #     print("on")
+    #     for i in range(0, len(f_headers), chunk_size):
+    #         headers_chunk = f_headers[i:i + chunk_size]
+    #         thread = threading.Thread(target=self.fuzz_headers, args=(headers_chunk,))
+    #         thread.start()
+    #         threads.append(thread)
 
-        # Split the list into chunks and create a thread for each chunk
-        for i in range(0, len(f_headers), chunk_size):
-            headers_chunk = f_headers[i:i + chunk_size]
-            thread = threading.Thread(target=self.fuzz_headers, args=(headers_chunk,))
-            thread.start()
-            threads.append(thread)
-
-        for thread in threads:
-            thread.join(timeout=10)
+    #     for thread in threads:
+    #         thread.join(timeout=10)
 

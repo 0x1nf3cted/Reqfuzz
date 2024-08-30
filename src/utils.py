@@ -85,9 +85,11 @@ class RequestFileParser:
         print(f"{Fore.LIGHTMAGENTA_EX}headers\n")
         for k, v in headers.items():
             print(f"{k}: {v}")
-        print("\n")
-        print(f"{Fore.LIGHTMAGENTA_EX}body\n")
-        print(request_body)
+
+        if(len(request_body) != 0):
+            print("\n")
+            print(f"{Fore.LIGHTMAGENTA_EX}body\n")
+            print(request_body)
 
         print(f"{Fore.YELLOW}_____________________________________________________________________")
 
