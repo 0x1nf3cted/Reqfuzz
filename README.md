@@ -1,6 +1,6 @@
 # Reqfuzz
 
-![Reqfuzz](image/reqfuzz.png)
+![Reqfuzz](images/reqfuzz.png)
 
 
 ### Description:
