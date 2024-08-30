@@ -1,10 +1,58 @@
-# Reqfuzz
+### Description:
 
-Reqfuzz is a tool for Bypassing http headers, and many more features.
+**ReqFuzz** is a specialized tool for fuzzing HTTP headers to identify potential security vulnerabilities and bypass localhost restrictions. It tests how various headers affect web applications and can help in discovering issues related to header handling and access controls. This tool supports multiple HTTP methods (`GET`, `POST`, `PUT`, etc.) and utilizes multithreading to efficiently process a large number of header variations.
 
+### Usage Guide:
 
+#### Basic Command:
+```bash
+python reqfuzz.py -h <request_file>
+```
+- **`<request_file>`**: Specifies the file with HTTP request details, including the method, endpoint, protocol, headers, and body.
 
+#### Options:
 
-## Warning:
+- **`-h <request_file>`**:
+  - **Purpose**: Defines the file that contains the HTTP request to be tested.
+  - **Format**: The file should include the request method, endpoint, protocol, and optionally, headers and body content.
 
-Reqfuzz is intended for ethical and legal security testing purposes only. Ensure that you have explicit permission from the owners of any systems or applications you test. Unauthorized use of this tool to attack or exploit systems without permission is illegal and unethical. Always conduct security testing in a responsible and lawful manner.
+- **`-f <header_file>`** (optional, used with `-h`):
+  - **Purpose**: Provides a file with additional headers to test.
+  - **Format**: Each line in the file should follow the format `Header-Name: Header-Value`.
+
+- **`-help`**:
+  - **Purpose**: Displays the help menu with instructions on how to use the tool.
+
+#### Examples:
+
+1. **Fuzz Headers from Request File**:
+   ```bash
+   python reqfuzz.py -h request.txt
+   ```
+   - Reads the HTTP request from `request.txt` and tests it with the default headers.
+
+2. **Fuzz Headers with Additional Headers**:
+   ```bash
+   python reqfuzz.py -h request.txt -f headers.txt
+   ```
+   - Tests the HTTP request from `request.txt` using additional headers specified in `headers.txt`.
+
+3. **Show Help Menu**:
+   ```bash
+   python reqfuzz.py -help
+   ```
+   - Provides information on how to use the tool and its available options.
+
+### Features:
+
+- **Multithreading**: Enhances performance by testing multiple headers concurrently.
+- **Header Fuzzing**: Tests various headers to detect how they influence server behavior and identify possible security issues.
+- **Bypassing Localhost Restrictions**: Helps in testing and bypassing restrictions that might be applied on localhost environments.
+- **Extensible Design**: The object-oriented structure allows for easy feature addition and modification.
+- **Error Handling**: Provides clear feedback on issues such as missing files or incorrect formats.
+
+### Use Cases:
+
+- **Security Testing**: Evaluate how different headers impact the security of your web applications.
+- **Localhost Restriction Bypass**: Test and bypass localhost-specific access controls.
+- **Compliance and Performance Checks**: Ensure that your application meets security standards and performs well under various header configurations.

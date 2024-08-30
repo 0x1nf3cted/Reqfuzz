@@ -141,28 +141,23 @@ class ReqFuzz:
         print(description)
 
     def print_help_menu(self):
-        print(f"""{Fore.YELLOW}{Style.BRIGHT}Reqfuzz Help Menu{Style.RESET_ALL}
+        print(f"""
+{Fore.YELLOW}{Style.BRIGHT}ReqFuzz Help Menu{Style.RESET_ALL}
 
-Usage:
-  python reqfuzz.py -h <file_name>  : Test multiple headers using the specified file.
-  python reqfuzz.py -help           : Show this help menu.
+    Usage:
+    python reqfuzz.py -h <request_file>  : Fuzz HTTP headers using the specified request file.
+    python reqfuzz.py -h <request_file> -f <header_file>  : Fuzz HTTP headers with additional headers from the specified header file.
+    python reqfuzz.py -help              : Show this help menu.
 
-Options:
-  -h <file_name>                   : Specify a request file to test.
-  -help                            : Display this help menu.
+    Options:
+    -h <request_file>  : Specify a file with the HTTP request details (method, endpoint, protocol, headers, body) you can get it from intercepting the request.
+    -f <header_file>   : Provide a file with additional headers to test.
+    -help              : Display this help menu.
 
-Examples:
-  python reqfuzz.py -h request
-    - This command will test the headers listed with the request file.
+    {Fore.CYAN}{Style.BRIGHT}For more information and updates, visit https://github.com/0x1nf3cted.{Style.RESET_ALL}
+        """)
 
-  python reqfuzz.py -help
-    - This command will display this help menu.
 
-Description:
-  Reqfuzz is a tool for Bypassing http headers, and many more features.
-
-{Fore.CYAN}{Style.BRIGHT}For more information and usage details, checkout https://github.com/0x1nf3cted.{Style.RESET_ALL}
-    """)
 
     def check_file(self, fname):
         return os.path.isfile(fname)
@@ -177,36 +172,40 @@ def run():
 
     fuzzer.not_a_hacking_tool_without_ascii_art()
 
-    if sys.argv[1] == '-h':
-        if len(sys.argv) >= 5 and sys.argv[3] == "-f":
-            header_file = sys.argv[4]
-            if not fuzzer.check_file(header_file):
-                print("Error, the header file that you provided doesn't exist")
+    match sys.argv[1]:
+        case '-h':
+            if len(sys.argv) >= 5 and sys.argv[3] == "-f":
+                header_file = sys.argv[4]
+                if not fuzzer.check_file(header_file):
+                    print(f"{Fore.RED}Error, the header file that you provided doesn't exist")
+                    fuzzer.print_help_menu()
+                    return
+                else:
+                    fuzzer.headers_provided = True
+                    with open(header_file) as file:
+                        fuzzer.forward_headers = [line.rstrip() for line in file]
+            elif len(sys.argv) == 4:
+                print(f"{Fore.RED}Error, number of arguments is not enough")
                 fuzzer.print_help_menu()
                 return
-            else:
-                fuzzer.headers_provided = True
-                with open(header_file) as file:
-                    fuzzer.forward_headers = [line.rstrip() for line in file]
-        elif len(sys.argv) == 4:
-            print("Error, number of arguments is not enough")
+
+            filename = sys.argv[2]
+            if not fuzzer.check_file(filename):
+                print(f"{Fore.RED}Error, the request file that you provided doesn't exist")
+                fuzzer.print_help_menu()
+                return
+
+            fuzzer.headers, fuzzer.body_content = fuzzer.parse_req_file(filename)
+
+            import time
+            start_time = time.time()
+            fuzzer.fuzz_in_threads(20)
+            print("--- %s seconds ---" % (time.time() - start_time))
+
+        case _:
+            print(f"{Fore.RED}Error, can't recognize the argument")
             fuzzer.print_help_menu()
-            return
-
-        filename = sys.argv[2]
-        if not fuzzer.check_file(filename):
-            print("Error, the request file that you provided doesn't exist")
-            return
-
-        fuzzer.headers, fuzzer.body_content = fuzzer.parse_req_file(filename)
-
-        import time
-        start_time = time.time()
-        fuzzer.fuzz_in_threads(20)
-        print("--- %s seconds ---" % (time.time() - start_time))
-
-    elif sys.argv[1] == '-help':
-        fuzzer.print_help_menu()
+    
 
 
 if __name__ == "__main__":
