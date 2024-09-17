@@ -15,6 +15,7 @@ class ReqBypass:
         self.request_info = {}
         self.body_content = ""
         self.headers_provided = False
+        self.reponse_metrics = {}
 
     def parse_req_file(self, filename):
         self.headers, self.request_info, self.body_content = self.request_parser.parse_req_file(filename)
@@ -31,13 +32,13 @@ class ReqBypass:
             local_headers = self.headers.copy()
             local_headers[header_name.strip()] = header_value.strip()
 
-            status, data = self.request_parser.send_request(local_headers, self.request_info, self.body_content)
+            self.reponse_metrics, data = self.request_parser.send_request(local_headers, self.request_info, self.body_content)
 
-            if status == 200:
-                print(f"{Fore.GREEN}Success, status code {status}{Style.RESET_ALL}")
+            if self.reponse_metrics["status"] == 200:
+                print(f"{Fore.GREEN}Success, status code {self.reponse_metrics["status"]}{Style.RESET_ALL}")
                  
             else:
-                print(f"{Fore.RED}Error {status}{Style.RESET_ALL}")
+                print(f"{Fore.RED}Error {self.reponse_metrics["status"]}{Style.RESET_ALL}")
             
             self.request_parser.print_header(local_headers, self.body_content) 
 

@@ -9,7 +9,7 @@ class ReqFuzzer:
         self.request_info = {}
         self.payload_list = []
         self.body_content = ""
-
+        self.reponse_metrics = {}
     
 
 
@@ -42,8 +42,8 @@ class ReqFuzzer:
 
  
                     self.parser.print_header(temp_headers, self.body_content)
-                    status, response_data = self.parser.send_request(temp_headers, self.request_info, self.body_content)
-                    self.parser.print_response(status, data=response_data)
+                    self.reponse_metrics, response_data = self.parser.send_request(temp_headers, self.request_info, self.body_content)
+                    self.parser.print_response(data=response_data, response_metrics=self.reponse_metrics)
 
     def search_for_req_body_fuzz(self):
         if "FUZZ" in self.body_content:
@@ -55,8 +55,8 @@ class ReqFuzzer:
                 temp_headers["Content-Length"] = str(len(temp_body_content))
                 
                 self.parser.print_header(temp_headers,temp_body_content)
-                status, response_data = self.parser.send_request(temp_headers, self.request_info, temp_body_content)
-                self.parser.print_response(status, data=response_data)
+                self.reponse_metrics, response_data = self.parser.send_request(temp_headers, self.request_info, temp_body_content)
+                self.parser.print_response(data=response_data, response_metrics=self.reponse_metrics)
 
 
 

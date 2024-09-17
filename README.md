@@ -36,6 +36,13 @@ python reqfuzz.py -b <request_file>
   - **Purpose**: Provides a file with payloads to test in place of `FUZZ` in the headers or request body.
   - **Format**: Each line in the file represents a different payload to be tested.
 
+- **`-s <domain>`**:
+  - **Purpose**: Enumerate subdomains to test in place of `FUZZ` or format the domains automatically.
+  - **Format**: `FUZZ.example.com` or a simple url.
+
+- **`-t <nb_threads>`**:
+  - **Purpose**: Specify the number of threads to use.
+  - **Format**: `python reqfuzz.py -t 20` this will use 20 threads.
 
 - **`-help`**:
   - **Purpose**: Displays the help menu with instructions on how to use the tool.
@@ -60,8 +67,12 @@ python reqfuzz.py -b <request_file>
    ```
    - Fuzzes the HTTP request from `request.txt` with payloads provided in `payloads.txt`.
 
+4. **Subdomain enumeration**:
+  ```bash
+  python reqfuzz.py *s domain -p <payload_file>
+  ```
 
-4. **Show Help Menu**:
+5. **Show Help Menu**:
    ```bash
    python reqfuzz.py -help
    ```
@@ -69,18 +80,10 @@ python reqfuzz.py -b <request_file>
 
 ### Features
 
-- **Multithreading**: Enhances performance by testing multiple headers concurrently.
-- **Header Fuzzing**: Tests various headers to detect how they influence server behavior and identify potential security issues.
-- **Bypassing Localhost Restrictions**: Useful for testing and bypassing localhost-specific access controls.
-- **Extensible Design**: Easy to add new features and modify existing functionality.
-- **Error Handling**: Provides clear feedback on issues such as missing files or incorrect formats.
-
-### Use Cases
-
-- **Security Testing**: Evaluate how different headers impact the security of your web applications.
-- **Localhost Restriction Bypass**: Test and bypass localhost-specific access controls.
-- **Fuzzing Request Headers and Body**: Dynamically fuzz request headers and request body using specified payloads.
-- **Compliance and Performance Checks**: Ensure that your application meets security standards and performs well under various header configurations.
-- **Fuzzing request headers**: it can fuzz request headers and request body on the fly
-- **Compliance and Performance Checks**: Ensure that your application meets security standards and performs well under various header configurations.
+- **Multithreading**.
+- **Header Fuzzing**.
+- **Bypassing Localhost Restrictions**.
+- **Extensible Design**.
+- **Subdomain enumeration**
+- **Error Handling**.
 
