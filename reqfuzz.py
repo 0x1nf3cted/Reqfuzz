@@ -52,6 +52,7 @@ def run():
                 with open(header_file) as file:
                     bypass.forward_headers = [line.rstrip() for line in file]
         elif args.filter_response:
+            handler.with_condition = True
             handler.parse_conditions(args.filter_response)
         filename = args.request_file
         if not handler.check_file(filename):
