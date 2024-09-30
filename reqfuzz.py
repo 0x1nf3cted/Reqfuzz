@@ -5,6 +5,7 @@ from src.bypass import ReqBypass
 from src.utils import not_a_hacking_tool_without_ascii_art, print_help_menu, RequestFileParser
 from src.fuzzer import ReqFuzzer
 from src.subdomain import Subdomain
+from src.proxy import Proxy
 import validators
 
 init(autoreset=True)
@@ -14,6 +15,7 @@ def run():
     bypass = ReqBypass()
     handler = RequestFileParser()
     fuzzer = ReqFuzzer()
+    
     subdomain = Subdomain()
 
     if len(sys.argv) < 2:
@@ -25,6 +27,8 @@ def run():
 
 
     parser.add_argument('-b', '--request-file', type=str, help='Specifies the file with HTTP request details.')
+    parser.add_argument('-proxy', '--proxy', type=int, help='Start a proxy at a certain to capture http requests.')
+    parser.add_argument('-script', '--script', type=str, help='Apply the script code on the payload.')
     parser.add_argument('-H', '--header-file', type=str, help='Provides a file with additional headers to test.')
     parser.add_argument('-filter', '--filter-response', type=str, help='Filter responses according to user conditions.')
     parser.add_argument('-f', '--fuzz-file', type=str, help='Specifies the file with HTTP request details for fuzzing.')
@@ -40,6 +44,11 @@ def run():
         else:
             print("Error: number of threads should be an integer")
 
+
+    if args.proxy:
+        proxy = Proxy(args.proxy)
+        proxy.start_proxy()
+        
     if args.request_file:
         if args.header_file:
             header_file = args.header_file
@@ -77,11 +86,27 @@ def run():
                 with open(header_file) as file:
                     fuzzer.payload_list = [line.rstrip() for line in file]
 
+        # elif args.filter_response:
+        #     handler.with_condition = True
+        #     handler.parse_conditions(args.filter_response)
+            
         filename = args.fuzz_file
         if not handler.check_file(filename):
             print(f"{Fore.RED}Error, the request file that you provided doesn't exist")
             print_help_menu()
             return
+        
+        if args.script:
+            if not handler.check_file(args.script):
+                print(f"{Fore.RED}Error, the script file that you provided doesn't exist")
+                print_help_menu()
+                return
+            else:
+                fuzzer.script = True
+                fuzzer.script_location = args.script
+                with open(args.script, 'r') as script_file:
+                    fuzzer.script_code = script_file.read()
+
 
         fuzzer.load_request_file(filename)
         fuzzer.fuzz()

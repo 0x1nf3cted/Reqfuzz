@@ -41,18 +41,3 @@ class ReqBypass:
                 print(f"{Fore.RED}Error {self.reponse_metrics["status"]}{Style.RESET_ALL}")
             
             self.request_parser.print_header(local_headers, self.body_content) 
-
-    # def fuzz_in_threads(self, num_threads):
-    #     f_headers = self.forward_headers if self.headers_provided else self.forward_headers_base
-    #     threads = []
-    #     chunk_size = (len(f_headers) + num_threads - 1) // num_threads  # Ceiling division to ensure all headers are covered
-    #     print("on")
-    #     for i in range(0, len(f_headers), chunk_size):
-    #         headers_chunk = f_headers[i:i + chunk_size]
-    #         thread = threading.Thread(target=self.fuzz_headers, args=(headers_chunk,))
-    #         thread.start()
-    #         threads.append(thread)
-
-    #     for thread in threads:
-    #         thread.join(timeout=10)
-

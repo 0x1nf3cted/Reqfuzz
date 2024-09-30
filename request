@@ -1,14 +1,11 @@
-GET /file.php HTTP/1.1
-Host: localhost:8000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:129.0) Gecko/20100101 Firefox/129.0
-Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/png,image/svg+xml,*/*;q=0.8
+GET http://challenge01.root-me.org:59091/api/profile?secret=FUZZ HTTP/1.1
+Host: challenge01.root-me.org:59091
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:130.0) Gecko/20100101 Firefox/130.0
+Accept: application/json
 Accept-Language: en-US,en;q=0.5
-Accept-Encoding: gzip, deflate, br
-Connection: close
-Upgrade-Insecure-Requests: 1
-Sec-Fetch-Dest: document
-Sec-Fetch-Mode: navigate
-Sec-Fetch-Site: none
-Sec-Fetch-User: ?1
-Priority: u=0, i
+Accept-Encoding: gzip, deflate
+Referer: http://challenge01.root-me.org:59091/
+Connection: keep-alive
+Cookie: _ga_SRYSKX09J7=GS1.1.1727700146.37.1.1727700209.0.0.0; _ga=GA1.1.847142479.1726338676; session=.eJwlzjsOw0AIANG7bJ0C2A-sL2PBAkpaO66i3D2W0kwx1fuUPY84n2V7H1c8yv7yspU6gCxnFWpuajJWh_Tge4C1yb60BTepkN1aVkFjBkKUhj31Tl9Nmbp5VPJqNGrzFSETZ6J1U4GRnRTEZ2AEZy5ldYFw4nJDrjOOvwahfH_S6S_F.ZvqdIQ.EO4QaDjnfnjy30O6nwWFerYEYio
+Priority: u=0
 

@@ -4,7 +4,7 @@ import os
 import http.client
 import time
 import re
-
+import urllib.parse
 
 class RequestFileParser:
     def __init__(self):
@@ -84,9 +84,12 @@ class RequestFileParser:
 
         # calculate reponse time
 
+
+        encoded_url = urllib.parse.quote(request_dest["endpoint"], safe=':/?#=&')
+
         start_time = time.time()
         conn.request(
-            method, request_dest["endpoint"], body_content, local_headers)
+            method, encoded_url, body_content, local_headers)
         response = conn.getresponse()
         response_metrics["time"] = time.time() - start_time
 
@@ -151,16 +154,31 @@ class RequestFileParser:
     def parse_conditions(self, conditions):
         print(conditions)
         c = conditions.split(";")
+        
+        # Initialize global_conditions if it does not exist
+        if not hasattr(self, 'global_conditions'):
+            self.global_conditions = {
+                'status': None,
+                'size': None,
+                'type': None,
+                'time': None
+            }
+        
         for cond in c:
             cond = cond.split(":", 1)
-            if (len(cond) != 2):
+            if len(cond) != 2:
                 print("Error, condition format is corrupted")
                 exit()
-            if (self.global_conditions[cond[0].strip()] not in ["size", "status", "type", "time"]):
-                print("Error: condition is not recognized")
+            
+            key = cond[0].strip()
+            value = cond[1].strip()
+            
+            if key not in ["status", "size", "type", "time"]:
+                print(f"Error: condition '{key}' is not recognized")
             else:
-                self.global_conditions[cond[0].strip()] = cond[1].strip()
-        print(self.global_conditions)
+                self.global_conditions[key] = value
+        
+
 
     def thread_worker(self, payload, function):
         threads = []
@@ -176,12 +194,13 @@ class RequestFileParser:
         for thread in threads:
             thread.join(timeout=10)
 
-    def print_header(self, headers, request_body):
+    def print_header(self, headers, request_body, req_info):
         print(
             f"{Fore.YELLOW}_____________________________________________________________________")
         print(
             f"{Fore.YELLOW}_____________________________________________________________________")
         print(f"{Fore.LIGHTMAGENTA_EX}headers\n")
+        print(req_info["method"], req_info["endpoint"])
         for k, v in headers.items():
             print(f"{k}: {v}")
 
@@ -273,6 +292,8 @@ def print_help_menu():
     python reqfuzz.py -b <request_file>                   : Fuzz HTTP headers using the specified request file.
     python reqfuzz.py -b <request_file> -h <header_file>  : Fuzz HTTP headers with additional headers from the specified header file.
     python reqfuzz.py -f request -p <payload_file>        : Fuzz HTTP headers using the specified payload file.
+    python reqfuzz.py -proxy <port_number>                : Start a proxy server on a certain port to intercept requests and write them into a file
+    python reqfuzz.py -script <script name>               : Apply script on the payload for brute force
     python reqfuzz.py -filter "status:200; time:14ms"     : Filter the response based on the passed filters.
     python reqfuzz.py -s example.com -p <payload_file>    : Subdomain enumeration
     python reqfuzz.py -s example.com  -t 20               : Specify the number of threads to use
@@ -281,6 +302,8 @@ def print_help_menu():
     Options:
     -b <request_file>  : Specify a file with the HTTP request details (method, endpoint, protocol, headers, body) you can get it from intercepting the request.
     -h <header_file>   : Provide a file with additional headers to test.
+    -proxy <port>      : Start a proxy server on a certain port to intercept requests and write them into a file called request
+    -script <script>   : Apply script on the payload for brute force
     -f request         : Indicate that the tool should fuzz the request headers.
     -p <payload_file>  : Specify a file with payloads to replace the 'FUZZ' placeholder in the headers.
     -s <domain>        : Subdomain enumeration.

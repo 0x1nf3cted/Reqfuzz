@@ -1,56 +1,56 @@
-
 # ReqFuzz
 
 ![ReqFuzz](images/reqfuzz.png)
 
 ### Overview
 
-**ReqFuzz** is a tool designed for fuzzing HTTP headers to detect potential security vulnerabilities and bypass restrictions. By testing a wide range of header configurations, it helps identify issues related to header handling and access control.
+**ReqFuzz** is a powerful tool for security testing that focuses on fuzzing HTTP headers to uncover potential vulnerabilities and bypass restrictions. By experimenting with various header configurations, ReqFuzz can help identify issues related to how headers are processed and managed in web applications. This tool is essential for security researchers and penetration testers looking to enhance their assessment of web application security.
 
 ### Usage
 
 #### Basic Command
 
-To initiate ReqFuzz, run the following command:
+To start using ReqFuzz, you can execute the following command:
 
 ```bash
 python reqfuzz.py -b <request_file>
 ```
 
-- **`<request_file>`**: Specifies the file containing HTTP request details, including the method, endpoint, protocol, headers, and body.
+- **`<request_file>`**: This is the file that contains details of the HTTP request, including the method, endpoint, protocol, headers, and body.
 
 #### Options
 
-- **`-b <request_file>`**:
-  - **Purpose**: Defines the file with the HTTP request to be tested.
-  - **Format**: The request file should include the method, endpoint, protocol, and optionally headers and body content.
+- **`-b <request_file>`**: 
+  - Specifies the main HTTP request to test.
+  
+- **`-H <header_file>`** (optional): 
+  - Allows you to specify additional headers for testing, one per line in the format `Header-Name: Header-Value`.
 
-- **`-H <header_file>`** (optional, used with `-b`):
-  - **Purpose**: Specifies an additional file containing headers to be tested.
-  - **Format**: Each line in the file should follow the format `Header-Name: Header-Value`.
+- **`-f <request_file>`**: 
+  - A request file to fuzz using a specified payload.
 
-- **`-f <request_file>`**:
-  - **Purpose**: Provides a request file to be fuzzed using a specified payload.
-  - **Format**: The request file should be formatted similarly to the `-b` option, containing HTTP request details.
+- **`-proxy <port>`**: 
+  - Starts an integrated proxy server on a given port to intercept HTTP requests.
+  - Example: `python reqfuzz.py -proxy 8000`.
 
-- **`-p <payload_file>`**:
-  - **Purpose**: Supplies a file containing payloads to replace the placeholder `FUZZ` in the headers or body.
-  - **Format**: Each line in the file represents a different payload for testing.
+- **`-p <payload_file>`**: 
+  - A file with different payloads that will replace the placeholder `FUZZ` in the headers or body.
 
-- **`-s <domain>`**:
-  - **Purpose**: Enumerates subdomains or formats domains for fuzzing by replacing `FUZZ`.
-  - **Format**: For instance, `FUZZ.example.com` or a standard URL format.
+- **`-s <domain>`**: 
+  - Enumerates subdomains by replacing `FUZZ` in the specified domain format.
 
-- **`-filter "condition"`**:
-  - **Purpose**: Filters responses based on specified criteria.
-  - **Format**: Example: `python reqfuzz.py -filter "status:200; time:14ms"`.
+- **`-filter "condition"`**: 
+  - Filters responses based on specified criteria, such as status codes or response times.
 
-- **`-t <nb_threads>`**:
-  - **Purpose**: Specifies the number of threads to be used for concurrent fuzzing.
-  - **Format**: Example: `python reqfuzz.py -t 20` will execute the fuzzing process using 20 threads.
+- **`-script <script>`**: 
+  - Allows you to apply custom scripts to modify the payloads for advanced testing. Users can write their own scripts or use predefined ones.
+  - Example: `python reqfuzz.py -f request -p <wordlist> -script scripts/md5_hash.py`.
 
-- **`-help`**:
-  - **Purpose**: Displays the help menu with detailed usage instructions.
+- **`-t <nb_threads>`**: 
+  - Sets the number of concurrent threads for the fuzzing process.
+
+- **`-help`**: 
+  - Displays a help menu with detailed instructions on how to use the tool.
 
 #### Examples
 
@@ -58,48 +58,52 @@ python reqfuzz.py -b <request_file>
    ```bash
    python reqfuzz.py -b request.txt
    ```
-   - Reads the HTTP request from `request.txt` and tests it with the default header fuzzing options.
 
 2. **Fuzz Headers with Additional Headers**:
    ```bash
    python reqfuzz.py -b request.txt -H headers.txt
    ```
-   - Tests the HTTP request from `request.txt` using the additional headers specified in `headers.txt`.
 
 3. **Fuzz Headers Using Payloads**:
    ```bash
    python reqfuzz.py -f request.txt -p payloads.txt
    ```
-   - Fuzzes the HTTP request from `request.txt` by using payloads from `payloads.txt`.
 
-4. **Subdomain Enumeration**:
+4. **Integrated Proxy to Intercept HTTP Requests**:
+   ```bash
+   python reqfuzz.py -proxy <port_number>
+   ```
+
+5. **Subdomain Enumeration**:
    ```bash
    python reqfuzz.py -s domain -p <payload_file>
    ```
 
-5. **Filter Responses**:
+6. **Filter Responses**:
    ```bash
    python reqfuzz.py -s domain -p <payload_file> -filter "status:200; time:14ms"
    ```
 
-6. **Display Help Menu**:
+7. **Display Help Menu**:
    ```bash
    python reqfuzz.py -help
    ```
-   - Shows detailed help and usage information.
 
 ### Key Features
 
-- **Multithreading**
-- **Header Fuzzing**
-- **Extensible Design**
-- **Subdomain Enumeration**
-- **Response Filtering**
+- **Multithreading**: Conduct multiple fuzzing operations simultaneously for efficiency.
+- **Header Fuzzing**: Test various HTTP headers for vulnerabilities.
+- **Integrated Proxy**: Intercept HTTP requests and log them for further analysis.
+- **Scripting Support**: Apply custom or predefined scripts to modify payloads dynamically.
+- **Extensible Design**: Easily add new features or customize existing ones.
+- **Subdomain Enumeration**: Automatically generate subdomains for testing.
+- **Response Filtering**: Filter responses to focus on specific criteria during testing.
 
 ### Use Cases
 
-**Local File Inclusion (LFI) Detection**: You can create a request file and use ReqFuzz to replace the `FUZZ` keyword with payloads from your LFI dictionary. Afterward, you can filter responses with specific criteria such as `-filter "status:200"` to identify successful LFI attempts.
+**Local File Inclusion (LFI) Detection**: Create a request file and use ReqFuzz to replace the `FUZZ` keyword with payloads from your LFI dictionary. You can then filter responses to identify successful attempts.
 
+Example Request for LFI:
 ```
 GET /FUZZ HTTP/1.1
 Host: localhost:8000
@@ -118,4 +122,11 @@ Priority: u=0, i
 
 **Note**: You can fuzz any part of the HTTP request file as needed.
 
+### Proxy Feature
+
+The integrated proxy allows users to intercept HTTP requests. When you run the proxy, any request sent to the specified port will be captured and written to a file named `request`. This feature is particularly useful for testing and analyzing how different requests are processed by the server.
+
+### Scripting Feature
+
+The scripting capability allows users to apply custom scripts to the payloads during the fuzzing process. This enables advanced testing scenarios where users can modify or generate payloads dynamically, making it easier to adapt to various testing needs. Users can create their own scripts or utilize predefined scripts available with ReqFuzz.
 
