@@ -2,6 +2,7 @@ import base64
 import sys
 
 def transform(item):
+    
     return base64.b64encode(item.encode()).decode()
 
 if __name__ == "__main__":

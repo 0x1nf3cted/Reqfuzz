@@ -1,43 +1,58 @@
+from src.sandbox import Sandbox
 from src.utils import RequestFileParser
 import subprocess
+import os
+
 
 class ReqFuzzer:
     def __init__(self):
         self.parser = RequestFileParser()
+        self.sandbox = Sandbox()
         self.headers = {}
         self.script = False
         self.script_location = ""
+        self.script_code = ""
         self.request_info = {}
         self.payload_list = []
         self.body_content = ""
         self.reponse_metrics = {}
 
     def apply_script(self, item):
-        try:
-            process = subprocess.Popen(
-                ['python3', self.script_location],
-                stdin=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE
-            )
-            stdout, stderr = process.communicate(input=item.encode())
+        file_type = os.path.splitext(self.script_location)[1]
+        lang = "python"
 
-            if stderr:
-                raise RuntimeError(f"Script error: {stderr.decode().strip()}")
+        match file_type:
+            case ".py":
+                lang = "python"
+            case ".rb":
+                lang = "ruby"
+            case ".pl":
+                lang = "perl"
+            case ".dart":
+                lang = "dart"
+            case ".php":
+                lang = "php"
+            case ".js":
+                lang = "node"
+            case ".sh":
+                lang = "bash"
+            case ".R":
+                lang = "R"
+            case ".hs":
+                lang = "ghci"
+            case ".exs":
+                lang = "elixir"
+            case ".swift":
+                lang = "swift"
+            case _:
+                raise RuntimeError(f"Script error: {self.script_location} cannot be run by any supported language")
 
-            output = stdout.decode().strip()
-            if not output:
-                print("Warning: The script returned no output.")
-                return None
-            
-            return output
+        output = self.sandbox.run_code(lang, self.script_code, item)  # Pass item to run_code
+        if not output:
+            print("Warning: The script returned no output.")
+            return None
+        return output
 
-        except FileNotFoundError:
-            print(f"Error: The script '{self.script_location}' was not found.")
-        except Exception as e:
-            print(f"Error applying script: {e}")
-
-        return None
 
     def load_request_file(self, filename):
         self.headers, self.request_info, self.body_content = self.parser.parse_req_file(filename)
