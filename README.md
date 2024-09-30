@@ -40,7 +40,7 @@ pip install -r requirements.txt
 To start using ReqFuzz, execute the following command in your terminal:
 
 ```bash
-python reqfuzz.py -b <request_file>
+python reqfuzz.py -f <request_file> -p <wordlist>
 ```
 
 - **`<request_file>`**: A file containing details of the HTTP request, including the method, endpoint, headers, and body. 
